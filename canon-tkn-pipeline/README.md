@@ -1,5 +1,5 @@
 # IBM GARAGE  |  Cloud Pak Acceleration Team  - CPAT
-## Canon  java Pipeline
+## Canon Java Pipeline
 
 ## Configure your workspace
   ```bash
