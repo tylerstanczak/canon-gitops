@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: batch-task-deploy
+  name: java-task-deploy
 spec:
   params:
     - name: MANIFEST_DIR
@@ -10,17 +10,17 @@ spec:
     - name: IMAGE_REGISTRY
       default: image-registry.openshift-image-registry.svc:5000/$NAMESPACE
     - name: APP_NAME
-      default: batch
+      default: java
     - name: TOOL_IMAGE
       default: docker.io/csantanapr/helm-kubectl-curl-git-jq-yq
   resources:
     inputs:
-    - name: batch-git-tekton
+    - name: java-git-tekton
       type: git
   steps:
     - name: update-manifests
       image: $(inputs.params.TOOL_IMAGE)
-      workingDir: /workspace/batch-git-tekton/batch-tkn-pipeline
+      workingDir: /workspace/java-git-tekton/java-tkn-pipeline
       command: ["/bin/bash"]
       args:
       - -c
@@ -50,7 +50,7 @@ spec:
     - name: apply-manifests
       image: quay.io/openshift/origin-cli:latest
       command: ["/bin/bash", "-c"]
-      workingDir: /workspace/batch-git-tekton/batch-tkn-pipeline
+      workingDir: /workspace/java-git-tekton/java-tkn-pipeline
       args:
       - |-
         set -e

@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: batch-build-image
+  name: java-build-image
 spec:
   params:
     - name: BUILDER_IMAGE
@@ -17,17 +17,17 @@ spec:
       description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
       default: "false"
     - name: APP_NAME
-      default: batch
+      default: java
     - name: IMAGE_REGISTRY
       default: image-registry.openshift-image-registry.svc:5000/$NAMESPACE
   resources:
     inputs:
-      - name: batch-git
+      - name: java-git
         type: git
   steps:
     - name: build
       image: $(inputs.params.BUILDER_IMAGE)
-      workingDir: /workspace/batch-git
+      workingDir: /workspace/java-git
       command: ["/bin/bash"]
       args:
         - -c

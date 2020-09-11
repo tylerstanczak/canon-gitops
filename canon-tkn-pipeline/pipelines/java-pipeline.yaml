@@ -1,30 +1,30 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: batch-pipeline
+  name: java-pipeline
 spec:
   resources:
-    - name: batch-git
+    - name: java-git
       type: git
-    - name: batch-git-tekton
+    - name: java-git-tekton
       type: git
   tasks:
     - name: build
       taskRef:
-        name: batch-build-image
+        name: java-build-image
       resources:
         inputs:
-          - name: batch-git
-            resource: batch-git
+          - name: java-git
+            resource: java-git
       params:
         - name: APP_NAME
-          value: batch
+          value: java-app
     - name: deploy
       taskRef:
-        name: batch-task-deploy
+        name: java-task-deploy
       resources:
         inputs:
-          - name: batch-git-tekton
-            resource: batch-git-tekton
+          - name: java-git-tekton
+            resource: java-git-tekton
       runAfter:
         - build

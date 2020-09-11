@@ -1,10 +1,10 @@
 # IBM GARAGE | Cloud Pak Acceleration Team - CPAT
-## Alfa Evolution Containerization POC pipeline - BATCH
+## Canon  Containerization POC pipeline - java
  
 
 ## Pipeline Resource
 ```bash
-batch-resources.yaml
+java-resources.yaml
 git-secret.yaml
 ```
 
@@ -17,7 +17,7 @@ git-secret.yaml
     
        ```yaml
        annotations:
-         tekton.dev/git-0: https://us-south.git.cloud.ibm.com
+         tekton.dev/git-0: https://github.ibm.com
        ```
        Is necessary for accessing any private IBM repo
     4. Replace the username field with your IBM e-mail address
@@ -28,7 +28,7 @@ git-secret.yaml
         
 ## Create the Resources
 ```bash
-oc apply -f batch-resources.yaml
+oc apply -f java-resources.yaml
 oc apply -f git-secret.yaml
 ```
 

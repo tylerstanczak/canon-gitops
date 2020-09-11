@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: batch
-  name: batch-service
+    app: java-app
+  name: java-service
 spec:
   type: NodePort
   ports:
@@ -12,4 +12,4 @@ spec:
     port: 9443
     targetPort: 9443
   selector:
-    app: batch
+    app: java-app
