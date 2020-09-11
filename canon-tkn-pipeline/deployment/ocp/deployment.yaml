@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: batch
+    version: v1
+    app.kubernetes.io/part-of: Alfa-POC
+  name: batch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: batch
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: batch
+        version: v1
+    spec:
+      containers:
+      - name: batch
+        image: image-registry.openshift-image-registry.svc:5000/$NAMESPACE/batch:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9443

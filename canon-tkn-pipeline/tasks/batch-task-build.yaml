@@ -1,0 +1,65 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: batch-build-image
+spec:
+  params:
+    - name: BUILDER_IMAGE
+      description: The location of the buildah builder image.
+      default: quay.io/buildah/stable:v1.11.0
+    - name: DOCKERFILE
+      description: Path to the Dockerfile to build.
+      default: ./Dockerfile
+    - name: CONTEXT
+      description: Path to the directory to use as context.
+      default: .
+    - name: TLSVERIFY
+      description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS registry)
+      default: "false"
+    - name: APP_NAME
+      default: batch
+    - name: IMAGE_REGISTRY
+      default: image-registry.openshift-image-registry.svc:5000/$NAMESPACE
+  resources:
+    inputs:
+      - name: batch-git
+        type: git
+  steps:
+    - name: build
+      image: $(inputs.params.BUILDER_IMAGE)
+      workingDir: /workspace/batch-git
+      command: ["/bin/bash"]
+      args:
+        - -c
+        - |
+          set -e
+          pwd
+          ls -l
+          echo =======================================
+          NEW_IMAGE_ID="$(inputs.params.IMAGE_REGISTRY)/$(inputs.params.APP_NAME):latest"
+          NEW_IMAGE_ID="$(echo $NEW_IMAGE_ID | sed s/\$NAMESPACE/$NAMESPACE/)"
+          echo "Building Image $NEW_IMAGE_ID"
+          echo ===================================
+          buildah bud --tls-verify="$(inputs.params.TLSVERIFY)" --layers -f "$(DOCKERFILE)" -t "$NEW_IMAGE_ID" "$(inputs.params.CONTEXT)"
+          echo "Pushing Image $NEW_IMAGE_ID"
+          buildah push --tls-verify="$(inputs.params.TLSVERIFY)" "$NEW_IMAGE_ID" "docker://$NEW_IMAGE_ID"
+          echo "NEW_IMAGE_ID=$NEW_IMAGE_ID" >> /workspace/env-config
+          echo  --------------------------------------
+          echo "Task build-image completed sucessfully."
+          echo  --------------------------------------
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: varlibcontainers
+          mountPath: /var/lib/containers
+      env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+
+  volumes:
+    - name: varlibcontainers
+      emptyDir: {}
+    - name: m2-repository
+      emptyDir: {}

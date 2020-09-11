@@ -1,0 +1,71 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  # Keep in mind that this name must match the name of the binding in the event listener YAML
+  name: batch
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.head_commit.id)
+    - name: gitrepositoryurl
+      value: $(body.repository.url)
+    - name: contenttype
+      value: $(header.Content-Type)
+
+---
+
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: batch
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - name: batch
+      template:
+        name: batch
+
+---
+
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: batch
+spec:
+  params:
+    - name: gitrevision
+      description: The git revision
+      default: ocp-2
+    - name: gitrepositoryurl
+      description: The git repository url
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        generateName: batch-webhook-run-
+      spec:
+        pipelineRef:
+          name: batch-pipeline
+        resources:
+          - name: batch-git-tekton
+            resourceRef:
+              name: batch-git-tekton
+          - name: batch-git
+            resourceSpec:
+              type: git
+              params:
+                - name: revision
+                  value: ocp-2
+                - name: url
+                  value: https://us-south.git.cloud.ibm.com/alfa-tsp/poc/BATCH.git
+          - name: batch-git
+            resourceSpec:
+              type: git
+              params:
+                - name: revision
+                  value: $(params.gitrevision)
+                - name: url
+                  value: $(params.gitrepositoryurl)
+        serviceAccountName: pipeline
+

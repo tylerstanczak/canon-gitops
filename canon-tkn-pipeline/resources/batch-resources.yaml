@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: batch-git
+spec:
+  type: git
+  params:
+    - name: revision
+      value: ocp
+    - name: url
+      value: https://us-south.git.cloud.ibm.com/alfa-tsp/poc/BATCH.git
+
+---
+
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: batch-git-tekton
+spec:
+  type: git
+  params:
+    - name: revision
+      value: master
+    - name: url
+      value: https://us-south.git.cloud.ibm.com/alfa-tsp/poc/poc-pipeline.git
+
+---
+
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: batch-image
+spec:
+  params:
+    - name: url
+      value: 'image-registry.openshift-image-registry.svc:5000/$NAMESPACE/batch:latest'
+  type: image
