@@ -77,7 +77,7 @@ oc expose svc el-java
 oc get route el-java -o jsonpath='{.spec.host}'
 
 export GIT_REPO_NAME=java
-export GIT_REPO_OWNER=Canon-tsp/poc
+export GIT_REPO_OWNER=<GIT_OWNER>
 export GIT_USERNAME=<YOUR_USER_NAME>  (e.g.; Omar-Gaye)
 export GIT_TOKEN=<YOUR_GIT_TOKEN>
 export GIT_WEBHOOK_URL=$(oc get route el-java -o jsonpath='{.spec.host}')
