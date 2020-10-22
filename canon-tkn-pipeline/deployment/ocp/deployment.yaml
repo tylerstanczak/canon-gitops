@@ -19,15 +19,15 @@ spec:
         version: v1
     spec:
       containers:
-      - name: java-app
-        image: image-registry.openshift-image-registry.svc:5000/$NAMESPACE/java-app:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 9080
-        - containerPort: 9443
-        env:
-        - name: spring_profiles_active
-          valueFrom:
-            configMapKeyRef:
-              name: csmp-config
-              key: spring_profiles_active
+        - name: java-app
+          image: image-registry.openshift-image-registry.svc:5000/$NAMESPACE/java-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9080
+            - containerPort: 9443
+          env:
+          - name: spring_profiles_active
+            valueFrom:
+              configMapKeyRef:
+                name: csmp-config
+                key: spring_profiles_active
