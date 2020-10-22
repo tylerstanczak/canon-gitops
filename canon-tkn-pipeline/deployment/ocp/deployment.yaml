@@ -25,9 +25,9 @@ spec:
         ports:
         - containerPort: 9080
         - containerPort: 9443
-      env:
-      - name: spring_profiles_active
-        valueFrom:
-          configMapKeyRef:
-            name: csmp-config
-            key: spring_profiles_active
+        env:
+        - name: spring_profiles_active
+          valueFrom:
+            configMapKeyRef:
+              name: csmp-config
+              key: spring_profiles_active
