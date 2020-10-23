@@ -31,3 +31,23 @@ spec:
               configMapKeyRef:
                 name: csmp-config
                 key: spring_profiles_active
+          - name: db_host
+            valueFrom:
+              secretKeyRef:
+                name: csmp-secrets
+                key: db_host
+          - name: db_service
+            valueFrom:
+              secretKeyRef:
+                name: csmp-secrets
+                key: db_service
+          - name: db_user
+            valueFrom:
+              secretKeyRef:
+                name: csmp-secrets
+                key: db_user
+          - name: db_pswd
+            valueFrom:
+              secretKeyRef:
+                name: csmp-secrets
+                key: db_pswd
